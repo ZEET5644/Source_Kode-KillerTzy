@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebScraper Pro - Website Source Extractor Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Background Elements */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .shape-1 { width: 300px; height: 300px; top: -100px; right: -100px; }
+        .shape-2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+        .shape-3 { width: 150px; height: 150px; top: 50%; right: 20%; }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin: 40px 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary));
+        }
+
+        .logo {
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent), var(--primary));
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card h2 i {
+            color: var(--accent);
+            font-size: 2.2rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #e0e7ff;
+            font-size: 1.1rem;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 18px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        input[type="url"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 35px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent), #f97316);
+        }
+
+        .btn-large {
+            padding: 20px 40px;
+            font-size: 1.2rem;
+        }
+
+        /* Results Section */
+        .results-section {
+            min-height: 300px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .download-section {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(37, 99, 235, 0.1));
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .feature h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .feature p {
+            color: #e0e7ff;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-logo {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e0e7ff;
+        }
+
+        .contact-item i {
+            color: var(--accent);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-code"></i>
+            </div>
+            <h1>WebScraper Pro</h1>
+            <p class="subtitle">Ekstrak semua sumber kode website dengan satu klik - Powerfull Website Source Extractor</p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Website Sukses Di-scrape</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Available</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="card input-section">
+                <h2><i class="fas fa-link"></i> Masukkan URL Website Target</h2>
+                <p style="color: #e0e7ff; margin-bottom: 25px; line-height: 1.6;">
+                    Masukkan URL website yang ingin Anda ekstrak sumber kodenya. Sistem kami akan mengumpulkan semua file HTML, CSS, JavaScript, gambar, dan resources lainnya.
+                </p>
+                
+                <div class="form-group">
+                    <label for="urlInput"><i class="fas fa-globe"></i> Alamat Website:</label>
+                    <div class="input-container">
+                        <input type="url" id="urlInput" placeholder="https://contoh-website.com" required>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button id="scrapeBtn" class="btn btn-primary btn-large">
+                        <i class="fas fa-bolt"></i> Ekstrak Sekarang
+                    </button>
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <i class="fas fa-broom"></i> Bersihkan
+                    </button>
+                </div>
+
+                <div style="margin-top: 25px; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border-left: 4px solid var(--accent);">
+                    <h4 style="color: var(--accent); margin-bottom: 10px;"><i class="fas fa-lightbulb"></i> Tips:</h4>
+                    <p style="color: #e0e7ff; line-height: 1.6;">
+                        • Pastikan website yang di-scrape memiliki izin untuk diakses<br>
+                        • Hasil terbaik didapat dari website yang tidak menggunakan proteksi ketat<br>
+                        • File akan dikompresi dalam format ZIP untuk memudahkan download
+                    </p>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="card results-section" id="resultsSection" style="display: none;">
+                <h2><i class="fas fa-chart-bar"></i> Hasil Ekstraksi</h2>
+                <div id="statusMessage"></div>
+                
+                <div class="loading" id="loadingSection" style="display: none;">
+                    <div class="spinner"></div>
+                    <p style="color: #e0e7ff; font-size: 1.1rem;">Sedang mengekstrak sumber kode website...</p>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 10px;">Proses ini membutuhkan waktu beberapa detik</p>
+                </div>
+
+                <div class="download-section" id="downloadSection" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 style="color: var(--success); font-size: 2rem; margin-bottom: 15px;">Ekstraksi Berhasil!</h3>
+                        <p style="color: #e0e7ff; font-size: 1.1rem;">Website berhasil di-scrape dan siap untuk diunduh</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="htmlCount">0</div>
+                            <div class="stat-label">File HTML</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="cssCount">0</div>
+                            <div class="stat-label">File CSS</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="jsCount">0</div>
+                            <div class="stat-label">File JavaScript</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="imageCount">0</div>
+                            <div class="stat-label">Gambar</div>
+                        </div>
+                    </div>
+
+                    <p style="color: #e0e7ff; margin: 25px 0; font-size: 1.1rem;">
+                        Total file yang berhasil diambil: <strong style="color: var(--accent); font-size: 1.3rem;" id="totalFiles">0</strong>
+                    </p>
+
+                    <button id="downloadBtn" class="btn btn-primary btn-large">
+                        <i class="fas fa-download"></i> Download ZIP File
+                    </button>
+                    
+                    <div style="margin-top: 25px;">
+                        <button id="newScrapeBtn" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i> Scrape Website Lain
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Cepat & Efisien</h3>
+                    <p>Ekstrak semua sumber kode website dalam hitungan detik dengan teknologi scraping terdepan</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Aman & Terpercaya</h3>
+                    <p>Semua proses dilakukan secara lokal, data Anda tetap aman dan tidak disimpan di server manapun</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud-download-alt"></i>
+                    </div>
+                    <h3>Download Lengkap</h3>
+                    <p>Dapatkan semua file termasuk HTML, CSS, JS, gambar, font, dan resources lainnya dalam satu ZIP</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-logo">
+                <i class="fas fa-code"></i>
+            </div>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fab fa-telegram"></i>
+                    <span>t.me/KillerTzy2</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>support@webscraper.pro</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+62 812-3456-7890</span>
+                </div>
+            </div>
+
+            <p style="color: #e0e7ff; margin-bottom: 20px;">
+                &copy; 2024 WebScraper Pro. All rights reserved. <br>
+                Built with ❤️ for developers and web enthusiasts
+            </p>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-secondary">
+                    <i class="fas fa-book"></i> Documentation
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-question-circle"></i> Support
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-star"></i> Rate Us
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('urlInput');
+            const scrapeBtn = document.getElementById('scrapeBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            const loadingSection = document.getElementById('loadingSection');
+            const downloadSection = document.getElementById('downloadSection');
+            const statusMessage = document.getElementById('statusMessage');
+            const newScrapeBtn = document.getElementById('newScrapeBtn');
+            
+            const htmlCount = document.getElementById('htmlCount');
+            const cssCount = document.getElementById('cssCount');
+            const jsCount = document.getElementById('jsCount');
+            const imageCount = document.getElementById('imageCount');
+            const totalFiles = document.getElementById('totalFiles');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Clear input
+            clearBtn.addEventListener('click', function() {
+                urlInput.value = '';
+                urlInput.focus();
+            });
+
+            // New scrape
+            newScrapeBtn.addEventListener('click', function() {
+                urlInput.value = '';
+                resultsSection.style.display = 'none';
+                urlInput.focus();
+            });
+
+            scrapeBtn.addEventListener('click', async function() {
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    showMessage('warning', '<i class="fas fa-exclamation-triangle"></i> Silakan masukkan URL yang valid');
+                    return;
+                }
+
+                if (!url.startsWith('http')) {
+                    showMessage('warning', '<i class="fas fa-exclamation-triangle"></i> URL harus dimulai dengan http:// atau https://');
+                    return;
+                }
+
+                // Tampilkan section hasil
+                resultsSection.style.display = 'block';
+                loadingSection.style.display = 'block';
+                downloadSection.style.display = 'none';
+                
+                showMessage('info', '<i class="fas fa-spinner fa-spin"></i> Memulai proses ekstraksi...');
+
+                try {
+                    // Simulasi proses scraping
+                    await scrapeWebsite(url);
+                    
+                } catch (error) {
+                    loadingSection.style.display = 'none';
+                    showMessage('error', '<i class="fas fa-times-circle"></i> Error: ' + error.message);
+                }
+            });
+
+            function showMessage(type, message) {
+                statusMessage.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+            }
+
+            async function scrapeWebsite(url) {
+    showMessage('info', '<i class="fas fa-spinner fa-spin"></i> Sedang mengekstrak...');
+    try {
+        // Ganti BASE_URL kalau server kamu bukan localhost
+        const BASE_URL = "http://localhost:26543/storage/emulated/0/%23websource/index.html";
+        const response = await fetch(`${BASE_URL}/getcode`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url })
+        });
+
+        if (!response.ok) {
+            const txt = await response.text().catch(()=>null);
+            throw new Error(txt || `Server error: ${response.status}`);
+        }
+
+        // baca header statistik
+        const htmlFiles = parseInt(response.headers.get("x-html-count") || "0", 10);
+        const cssFiles = parseInt(response.headers.get("x-css-count") || "0", 10);
+        const jsFiles = parseInt(response.headers.get("x-js-count") || "0", 10);
+        const imageFiles = parseInt(response.headers.get("x-image-count") || "0", 10);
+        const total = parseInt(response.headers.get("x-total-files") || "0", 10);
+
+        // update UI counters (jika elemen ada)
+        document.getElementById('htmlCount').textContent = htmlFiles;
+        document.getElementById('cssCount').textContent = cssFiles;
+        document.getElementById('jsCount').textContent = jsFiles;
+        document.getElementById('imageCount').textContent = imageFiles;
+        document.getElementById('totalFiles').textContent = total;
+
+        const blob = await response.blob(); // zip blob
+        const downloadUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `website-source.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(downloadUrl);
+
+        loadingSection.style.display = 'none';
+        downloadSection.style.display = 'block';
+        showMessage('success', '<i class="fas fa-check-circle"></i> Ekstraksi selesai! File akan otomatis didownload.');
+    } catch (err) {
+        loadingSection.style.display = 'none';
+        showMessage('error', '<i class="fas fa-times-circle"></i> ' + err.message);
+    }
+}
+
+            // Auto-focus pada input URL
+            urlInput.focus();
+        });
+    </script>
+</body>
+</html>
