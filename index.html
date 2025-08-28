@@ -709,7 +709,7 @@
     showMessage('info', '<i class="fas fa-spinner fa-spin"></i> Sedang mengekstrak...');
     try {
         // Ganti BASE_URL kalau server kamu bukan localhost
-        const BASE_URL = "http://localhost:26543/storage/emulated/0/%23websource/index.html";
+        const BASE_URL = "https://source-kode-killer-tzy.vercel.app";
         const response = await fetch(`${BASE_URL}/getcode`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
